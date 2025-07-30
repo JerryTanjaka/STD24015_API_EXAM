@@ -36,8 +36,6 @@ def read_hello(request: Request):
         )
     return JSONResponse(content="Hello world", status_code=200)
 
-
-
 def serialized_stored_events():
     events_converted = []
     for event in events_store:
@@ -70,4 +68,3 @@ def catch_all(full_path: str):
     with open("../../17/python-api-mini-calendar/notFound.html", "r", encoding="utf-8") as file:
         html_content = file.read()
     return Response(content=html_content, status_code=404, media_type="text/html")
-
