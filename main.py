@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request
-from starlette.responses import JSONResponse
+from starlette.responses import JSONResponse, Response
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -31,5 +31,12 @@ def get_user():
 
 @app.get("/ping")
 def get_ping():
-    return("pong")
+    return Response("pong" , status_code = 200)
+
+@app.get("/home")
+def read_home():
+    with open("./welcome.html", "r", encoding="utf-8") as file:
+        html_content = file.read()
+    return Response(content=html_content, status_code=200, media_type="text/html")
+
 
