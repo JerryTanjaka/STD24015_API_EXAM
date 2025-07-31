@@ -1,5 +1,5 @@
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request,HTTPException,status
 from starlette.responses import JSONResponse, Response
 from pydantic import BaseModel
 from typing import List
@@ -43,6 +43,24 @@ def change_players(newPlayer: Player):
 
     players_memory.append(newPlayer)
     return {"message": "Nouveau joueur ajouté", "players": players_memory}
+@app.get("/players-authorized", status_code=200)
+def get_players_authorized(request: Request):
+    auth_header = request.headers.get("Authorization")
+
+    if auth_header is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Non autorisé : en-tête 'Authorization' manquant."
+        )
+
+    if auth_header != "bon courage":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Accès interdit : valeur 'Authorization' incorrecte."
+        )
+
+    # Si l'en-tête est correct, retour des joueurs comme /players
+    return players_memory
 
 
 
