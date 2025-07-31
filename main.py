@@ -16,6 +16,18 @@ post_memory: List[Post] = []
 def get_players():
     return  post_memory;
 
+@app.get("/ping/auth")
+def authentification(request: Request):
+    id_header = request.headers.get("identifiant")
+    mdp_header  = request.headers.get("mdps")
+    if id_header != "admin":
+        return Response("mots de passe ou identifiant incorrect" , status_code = 401)
+    if mdp_header !="123456":
+        return Response("mots de passe ou identifiant incorrect" , status_code = 401)
+
+    return Response("pong" , status_code = 200)
+
+
 @app.get("/ping")
 def get_ping():
     return Response("pong" , status_code = 200)
@@ -46,6 +58,3 @@ def change_posts(newPost: Post):
             return {"message": "post modifié", "posts": post_memory}
     post_memory.append(newPost)
     return {"message": "Nouveau post  ajouté", "players": post_memory}
-
-#@app.get("/ping/auth")
-#def
