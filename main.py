@@ -27,3 +27,9 @@ def create_user(user: User, request: Request):
 def get_user():
     example_user = User(name="Jean", age=25)
     return JSONResponse(content={"User": example_user.model_dump()}, status_code=200)
+
+
+@app.get("/ping")
+def get_ping():
+    return("pong")
+
