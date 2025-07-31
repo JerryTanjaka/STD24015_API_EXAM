@@ -10,20 +10,11 @@ class Post(BaseModel):
     title: str
     content :str
     creation:datetime
+post_memory: List[Post] = []
 
-#@app.post("/user")
-#def create_user(user: User, request: Request):
-#    accept_header = request.headers.get("Accept")
-#    if accept_header != "text/plain":
-#        return JSONResponse(content={"message": "Unsupported Media Type"}, status_code=400)
-#    return JSONResponse(content={"User": user.model_dump()}, status_code=200)
-
-
-@app.get("/user")
-def get_user():
-    example_user = User(name="Jean", age=25)
-    return JSONResponse(content={"User": example_user.model_dump()}, status_code=200)
-
+@app.get("/posts",status_code=200)
+def get_players():
+    return  post_memory;
 
 @app.get("/ping")
 def get_ping():
@@ -42,8 +33,19 @@ def catch_all(full_path: str):
         html_content = file.read()
     return Response(content=html_content, status_code=404, media_type="text/html")
 
-post_memory: List[Post] = []
 @app.post("/posts", status_code=201)
 def create_players(list_posts: List[Post]):
     post_memory.extend(list_posts)
     return post_memory
+
+@app.put("/posts")
+def change_posts(newPost: Post):
+    for i, post in enumerate(post_memory):
+        if post.title == newPost.title:
+            post_memory[i] = newPost
+            return {"message": "post modifié", "posts": post_memory}
+    post_memory.append(newPost)
+    return {"message": "Nouveau post  ajouté", "players": post_memory}
+
+#@app.get("/ping/auth")
+#def
